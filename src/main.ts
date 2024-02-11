@@ -1,18 +1,22 @@
 // src/index.js
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+import express, { type Express, type Request, type Response } from 'express'
+import dotenvFlow from 'dotenv-flow'
 
-dotenv.config();
+import clientes from './routes/clientes'
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
+dotenvFlow.config()
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+const app: Express = express()
+const port = process.env.PORT ?? 3000
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+app.get('/', (req: Request, res: Response) => {
+  res.send('Express + TypeScript Server')
+})
 
-export default app;
+app.use('/clientes', clientes)
+
+const server = app.listen(port, () => {
+  console.log(`[server]: Server is running at http://localhost:${port}`)
+})
+
+export default server
