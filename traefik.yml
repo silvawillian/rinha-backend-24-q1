@@ -1,0 +1,14 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+entryPoints:
+  web:
+    address: :9999
+
+providers:
+  file:
+    directory: /traefik-dynamic
+
+log:
+  level: DEBUG

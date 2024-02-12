@@ -1,0 +1,13 @@
+http:
+  routers:
+    to-rinha:
+      entryPoints:
+        - web
+      rule: 'Host(`localhost`)'
+      service: rinha
+  services:
+    rinha:
+      loadBalancer:
+        servers:
+          - url: http://node01:8080
+          - url: http://node02:8080

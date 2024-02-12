@@ -23,24 +23,17 @@ interface Transacao {
 router.get('/:id/extrato', async (req, res) => {
   const { id } = req.params
 
-  const clienteQuery = db<Cliente[]>`
-    SELECT * FROM clientes c WHERE c.id = ${id}
+  const [cliente] = await db<Cliente[]>`
+    SELECT * FROM clientes c WHERE c.id = ${id};
   `
-
-  const transacoesQuery = db<Transacao[]>`
-    SELECT * FROM transacoes t WHERE t.cliente_id = ${id}
-  `
-
-  const [[cliente], transacoes] = await Promise.all([
-    clienteQuery,
-    transacoesQuery
-  ])
 
   if (cliente === undefined) {
     return res.status(404).send({ msg: `cliente ${id} nao encontrado!` })
   }
 
-  console.log(transacoes)
+  const transacoes = await db<Transacao[]>`
+    SELECT * FROM transacoes t WHERE t.cliente_id = ${id} ORDER BY id DESC LIMIT 10;
+  `
 
   return res.status(200).send({
     saldo: {
@@ -77,6 +70,14 @@ router.post('/:id/transacoes', async (req, res) => {
     valor: body.valor
   }
 
+  if (transacao.descricao === null) {
+    return res.status(422).send({})
+  }
+
+  if (!Number.isInteger(Number(transacao.valor))) {
+    return res.status(422).send({})
+  }
+
   let novoSaldo = 0
 
   if (body.tipo === 'c') {
@@ -86,7 +87,7 @@ router.post('/:id/transacoes', async (req, res) => {
 
   if (body.tipo === 'd') {
     novoSaldo = cliente.saldo - body.valor
-    console.log(novoSaldo)
+
     if (novoSaldo + cliente.limite < 0) {
       return res
         .status(422)
