@@ -3,7 +3,7 @@ version: '3.5'
 services:
   node01: &api
     build: ./
-    restart: unless-stopped
+    restart: always
     hostname: node01
     networks:
       - rinha-network
@@ -15,25 +15,25 @@ services:
       resources:
         limits:
           cpus: '0.4'
-          memory: '210MB'
+          memory: '150MB'
 
   node02:
     <<: *api
     hostname: node02
 
-  haproxy:
-    image: haproxy
-    ports:
-      - '9999:9999'
-    networks:
-      - rinha-network
-    volumes:
-      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'
-          memory: '30MB'
+  #hanode01proxy:
+  #  image: haproxy
+  #  ports:
+  #    - '9999:9999'
+  #  networks:
+  #    - rinha-network
+  #  volumes:
+  #    - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+  #  deploy:
+  #    resources:
+  #      limits:
+  #        cpus: '0.2'
+  #        memory: '150MB'
 
   # traefik-rinha:
   #   image: traefik:v2.11
@@ -43,8 +43,8 @@ services:
   #   ports:
   #     - '9999:9999'
   #   depends_on:
-  #     - node01
-  #     - node02
+  #     - nodex1
+  #     - nodex2
   #   networks:
   #     - rinha-network
   #   deploy:
@@ -52,23 +52,23 @@ services:
   #       limits:
   #         cpus: '0.7'
   #         memory: '150MB'
-  # nginx-rinha:
-  #   image: nginx:latest
-  #   restart: unless-stopped
-  #   networks:
-  #     - rinha-network
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/nginx.conf
-  #   depends_on:
-  #     - node01
-  #     - node02
-  #   ports:
-  #     - 9999:9999
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.2'
-  #         memory: '50MB'
+  nginx-rinha:
+    image: nginx:latest
+    restart: unless-stopped
+    networks:
+      - rinha-network
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - node01
+      - node02
+    ports:
+      - 9999:9999
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: '50MB'
 
   db:
     image: postgres:latest
@@ -92,7 +92,7 @@ services:
           # de memória. A distribuição feita aqui é apenas
           # um exemplo – distribua como quiser.
           cpus: '0.5'
-          memory: '100MB'
+          memory: '200MB'
 
 # O uso do modo `bridge` deve ser adequado à carga que será usada no teste.
 # A edição anterior se beneficiou do modo host pois o volume de requisições

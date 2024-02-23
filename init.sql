@@ -13,7 +13,8 @@ BEGIN
         descricao VARCHAR(64),
         valor INTEGER NOT NULL,
         cliente_id INTEGER NOT NULL,
-        realizada_em TIMESTAMP NOT NULL DEFAULT NOW()
+        realizada_em TIMESTAMP NOT NULL DEFAULT NOW(),
+        FOREIGN KEY(cliente_id) REFERENCES clientes(id)
     );
 
     -- Inserção de valores iniciais na tabela clientes

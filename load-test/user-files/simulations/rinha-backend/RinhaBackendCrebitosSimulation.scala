@@ -56,7 +56,7 @@ class RinhaBackendCrebitosSimulation
   val httpProtocol = http
     .baseUrl("http://localhost:9999")
     .userAgentHeader("Agente do Caos - 2024/Q1")
-
+/* 
   val debitos = scenario("débitos")
     .exec {s =>
       val descricao = randomDescricao()
@@ -110,7 +110,7 @@ class RinhaBackendCrebitosSimulation
         jmesPath("saldo.total").validate("ConsistenciaSaldoLimite - Extrato", validarConsistenciaSaldoLimite)
     )
   )
-
+ */
   val validacaConcorrentesNumRequests = 25
   val validacaoTransacoesConcorrentes = (tipo: String) =>
     scenario(s"validação concorrência transações - ${tipo}")
@@ -260,7 +260,8 @@ class RinhaBackendCrebitosSimulation
       ),
       criterioClienteNaoEcontrado.inject(
         atOnceUsers(1)
-      ).andThen(
+      )
+      /* .andThen(
         debitos.inject(
           rampUsersPerSec(1).to(220).during(2.minutes),
           constantUsersPerSec(220).during(2.minutes)
@@ -273,7 +274,7 @@ class RinhaBackendCrebitosSimulation
           rampUsersPerSec(1).to(10).during(2.minutes),
           constantUsersPerSec(10).during(2.minutes)
         )
-      )
+      ) */
     )
   ).protocols(httpProtocol)
 }

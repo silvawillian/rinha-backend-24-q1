@@ -8,7 +8,7 @@
     "watch-compile": "swc src -w --out-dir dist",
     "watch-dev": "nodemon --watch \"dist/**/*\" -e js ./dist/src/main.js",
     "build": "swc src -d dist",
-    "start": "NODE_ENV=production node dist/src/main.js",
+    "start": "node dist/src/main.js",
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --ext .ts src --fix",
